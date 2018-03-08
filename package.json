@@ -1,0 +1,36 @@
+{
+  "name": "kiwi",
+  "version": "0.0.1",
+  "main": "index.js",
+  "author": "Frank Paulo Filho <me@frankpf.com>",
+  "license": "ISC",
+  "dependencies": {
+    "c8": "^7.6.0",
+    "chalk": "^4.1.0",
+    "require-rewrite": "^1.0.2",
+    "source-map-support": "^0.5.19",
+    "typescript": "^4.1.0-dev.20200916"
+  },
+  "scripts": {
+    "tsc": "tsc"
+  },
+  "requireRewrite": {
+    "map": [
+      [
+        "#src/",
+        "dist/src/"
+      ],
+      [
+        "#tests/",
+        "dist/tests/"
+      ]
+    ]
+  },
+  "devDependencies": {
+    "@types/node": "^13.13.5",
+    "prettier": "^2.0.5"
+  },
+  "engines": {
+    "node": "^14"
+  }
+}

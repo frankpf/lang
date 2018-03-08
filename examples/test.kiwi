@@ -1,0 +1,6 @@
+// line 1
+// line 2
+let a: Boolean = 50 >= "a"
+let b: Integer = a
+// line 5
+// line 6

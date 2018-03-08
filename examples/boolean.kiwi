@@ -1,0 +1,5 @@
+print false || "hi"; // hi
+print true || "hi"; // true
+
+print false && "hi"; // false
+print true && "hi"; // "hi"

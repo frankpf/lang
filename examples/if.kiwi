@@ -1,0 +1,11 @@
+
+let x: Integer = 3
+let y: Integer = 5
+let a: Boolean = if x > y {
+    print 1
+    2
+} else {
+    print 5
+    6
+}
+print "aa"

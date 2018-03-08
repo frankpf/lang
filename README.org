@@ -1,0 +1,39 @@
+
+* lang (name to be defined ¯\_(ツ)_/¯)
+
+tl;dr: I'm writing this programming language so that I can write my other programming language in this programming language
+
+while working on the VM for [[https://github.com/frankpf/kiwi][Kiwi]], I decided that I didn't
+like any existing programming language enough to use as the basis for implementing a VM.
+
+so I decided to write a new language. then I'll rewrite kiwi using this language.
+
+[[./spongebob.jpg]]
+
+* pretty errors
+
+uhh i've spent more time than i should on this feature
+
+let's give the compiler [[./examples/test.kiwi][a file with some type errors]] as input:
+#+begin_src kotlin
+// line 1
+// line 2
+let a: Boolean = 50 >= "a"
+let b: Integer = a
+// line 5
+// line 6
+#+end_src
+
+this is the output the compiler gives us:
+[[./screenshots/error.png]]
+
+
+* features I want
+
+- statically-typed
+- with type inference
+- ADTs
+- no GC
+- generics ([[https://golang.org][lol imagine creating a language without generics and calling it modern]])
+- will compile to native code, probably via C (at least in the beginning)
+- macros maybe idk
