@@ -45,24 +45,6 @@ export namespace TcType {
 	}
 }
 
-
-type AnnotatedAst = {
-	originalNode: Ast.Stmt
-	type: string
-}
-
-const annotate = (node: Ast.Stmt, type: string): AnnotatedAst => ({ originalNode: node, type})
-
-//function kiwiValueToTcType(value: KiwiType): TcType {
-//	const kiwiType = typeof value
-//	if (kiwiType === 'string') {
-//		return 'String'
-//	}
-//
-//	if (kiwiType === 'number') {
-//	}
-//}
-
 interface TypecheckResult {
 	tcType: TcType
 	typechecks: boolean
@@ -86,20 +68,6 @@ const mkTypecheckResult = (ctx: ProjectContext, tcType: TcType, typechecks: bool
 		return { ...result, tcType: TcType.Error }
 	}
 	return result
-}
-
-type ReportTypeErrorOpts = {
-	token: Token,
-	expected: TcType,
-	actual: TcType,
-	msg?: string
-}
-function reportTypeError(reporter: SourceErrorReporter, { msg, token, expected, actual }: ReportTypeErrorOpts) {
-	reporter.report(
-		`mismatched types`,
-		msg ?? `[reportTypeError] expected type ${expected} but got ${actual}`,
-		token
-	)
 }
 
 function typecheckExpr(ctx: ProjectContext, env: Environment, node: Ast.Expr, expectedType: TcType): TypecheckResult {
