@@ -39,7 +39,6 @@ function readStdinRepl(): Promise<string | 1> {
 			terminal: false,
 		})
 
-
 		rl.on('line', line => {
 			if (line.trim() === '$RESET$') {
 				rl.close()
@@ -47,10 +46,10 @@ function readStdinRepl(): Promise<string | 1> {
 				return
 			} else if (line.trim() === '$END$') {
 				rl.close()
-				resolve(1);
+				resolve(1)
 				return
 			} else {
-				src += line;
+				src += line
 			}
 		})
 		//process.stdin.on('readable', () => {

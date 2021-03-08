@@ -2,13 +2,17 @@ import {error} from '#src/Error'
 import {Token, TokenType} from '#src/Token'
 import * as Ast from '#src/Ast'
 import {Lazy} from '#src/Utils'
-import { TcType } from '#src/TypeChecker'
-import { ProjectContext } from '#src/ProjectContext'
+import {TcType} from '#src/TypeChecker'
+import {ProjectContext} from '#src/ProjectContext'
 
 class ParseError extends Error {}
 
 export class Parser {
-	private constructor(private readonly ctx: ProjectContext, private readonly tokens: Array<Token>, private current = 0) {}
+	private constructor(
+		private readonly ctx: ProjectContext,
+		private readonly tokens: Array<Token>,
+		private current = 0,
+	) {}
 
 	static parseTokens(ctx: ProjectContext, tokens: Token[]): (Ast.Stmt | null)[] | null {
 		const parser = new Parser(ctx, tokens)
@@ -68,11 +72,7 @@ export class Parser {
 				// @ts-ignore
 				func.name = null
 
-				return new Ast.Stmt.LetDeclaration(
-					name,
-					Ast.ToInfer,
-					func
-				)
+				return new Ast.Stmt.LetDeclaration(name, Ast.ToInfer, func)
 			}
 
 			return this.assignmentOrExpressionStatement()
@@ -87,18 +87,12 @@ export class Parser {
 
 	private finishReturnStatement(returnToken: Token): Ast.Stmt.Return {
 		if (this.match(TokenType.Semicolon)) {
-
 			//        v (column start)
 			// return nil
 			const column = returnToken.lexeme.length + 2
 
 			return new Ast.Stmt.Return(
-				new Ast.Expr.Literal(
-					null,
-					new Token(
-						TokenType.Nil, 'nil', null, returnToken.line, column),
-					TcType.Nil,
-				)
+				new Ast.Expr.Literal(null, new Token(TokenType.Nil, 'nil', null, returnToken.line, column), TcType.Nil),
 			)
 		} else {
 			const expr = this.expression()
@@ -172,7 +166,10 @@ export class Parser {
 		return this.logicOr()
 	}
 
-	private finishFunctionExpression(funcToken: Token, { kind, ensureName }: { kind: 'function' | 'class method', ensureName: boolean }) {
+	private finishFunctionExpression(
+		funcToken: Token,
+		{kind, ensureName}: {kind: 'function' | 'class method'; ensureName: boolean},
+	) {
 		let name: Token | null = null
 		if (ensureName) {
 			name = this.consume(TokenType.Identifier, `Expected ${kind} name`)
@@ -181,14 +178,16 @@ export class Parser {
 		}
 		const nameInError = name === null ? `anonymous ${kind}` : `${name} ${kind}`
 
-
 		this.consume(TokenType.OpenParen, `Expected "(" after ${nameInError}`)
 		const paramList = [] as Token[]
 		if (this.match(TokenType.Identifier)) {
 			const firstParam = this.previous()
 			paramList.push(firstParam)
 			while (this.match(TokenType.Comma)) {
-				const param = this.consume(TokenType.Identifier, `Expected parameter name after comma in parameter list for ${nameInError}`)
+				const param = this.consume(
+					TokenType.Identifier,
+					`Expected parameter name after comma in parameter list for ${nameInError}`,
+				)
 				paramList.push(param)
 			}
 		}
@@ -197,7 +196,7 @@ export class Parser {
 		const {statements} = this.finishBlockExpression(this.previous())
 
 		// Desugar function return
-		const lastStmt = statements[statements.length-1]
+		const lastStmt = statements[statements.length - 1]
 		let returnStmt: Ast.Stmt.Return
 		if (lastStmt instanceof Ast.Stmt.Return) {
 			statements.pop()
@@ -217,7 +216,7 @@ export class Parser {
 						-1, // FIXME: emit proper column
 					),
 					TcType.Nil,
-				)
+				),
 			)
 		}
 		return new Ast.Expr.Function(name, paramList, statements, funcToken, returnStmt)
@@ -343,7 +342,7 @@ export class Parser {
 		if (this.match(TokenType.Fun)) {
 			return this.finishFunctionExpression(this.previous(), {
 				kind: 'function',
-				ensureName: false
+				ensureName: false,
 			})
 		}
 

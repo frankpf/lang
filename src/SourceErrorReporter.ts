@@ -36,11 +36,12 @@ export class SourceErrorReporter {
 	private decorateOffendingLine(num: number, token: Token, lineMsg: string): string {
 		const offendingLine = this.separator(num) + this.lines[num]
 		// FIXME: when token.column is 0, we're doing ' '.repeat(-1)
-		let errorDecoration = this.separator('nonumber')
-			+ ' '.repeat(token.column-1)
-			+ chalk.bold.red('~').repeat(token.lexeme.length)
+		let errorDecoration =
+			this.separator('nonumber') + ' '.repeat(token.column - 1) + chalk.bold.red('~').repeat(token.lexeme.length)
 
-		return this.MARKER + offendingLine + '\n' + this.SPACING + errorDecoration + ' ' + chalk.bold.red(lineMsg) + '\n'
+		return (
+			this.MARKER + offendingLine + '\n' + this.SPACING + errorDecoration + ' ' + chalk.bold.red(lineMsg) + '\n'
+		)
 	}
 
 	private decorateContextLine(num: number): string {

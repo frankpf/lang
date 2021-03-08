@@ -3,7 +3,7 @@ import {TokenType, Token} from '#src/Token'
 import {Scanner} from '#src/Scanner'
 import * as Ast from '#src/Ast'
 import {Parser} from '#src/Parser'
-import { TcType } from '#src/TypeChecker'
+import {TcType} from '#src/TypeChecker'
 
 export const parse = (text: string) => Parser.parseTokens(Scanner.scanText(text))
 
@@ -33,22 +33,24 @@ export function litExpr(value: number | string | boolean | null, line: number) {
 		throw new Error(`Couldnt match value=${value} (type=${typeof value})`)
 	}
 
-	const lexeme = type === TokenType.StringLit
-		? `"${value}"`
-		: value?.toString() || "nil"
+	const lexeme = type === TokenType.StringLit ? `"${value}"` : value?.toString() || 'nil'
 
-	const literal = type === TokenType.True || type === TokenType.False
-			? null
-			: value
+	const literal = type === TokenType.True || type === TokenType.False ? null : value
 
 	const tcType: TcType | Error =
-		type === TokenType.StringLit ? TcType.String
-		: type === TokenType.IntegerLit ? TcType.Integer
-		: type === TokenType.DoubleLit ? TcType.Double
-		: type === TokenType.Nil ? TcType.Nil
-		: type === TokenType.True ? TcType.Boolean
-		: type === TokenType.False ? TcType.Boolean
-		: new Error(`TcType not found for TokenType ${type}`)
+		type === TokenType.StringLit
+			? TcType.String
+			: type === TokenType.IntegerLit
+			? TcType.Integer
+			: type === TokenType.DoubleLit
+			? TcType.Double
+			: type === TokenType.Nil
+			? TcType.Nil
+			: type === TokenType.True
+			? TcType.Boolean
+			: type === TokenType.False
+			? TcType.Boolean
+			: new Error(`TcType not found for TokenType ${type}`)
 
 	if (tcType instanceof Error) {
 		throw tcType

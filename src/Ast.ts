@@ -2,7 +2,16 @@ import {Token} from '#src/Token'
 import {KiwiType} from '#src/Types'
 import {TcType} from '#src/TypeChecker'
 
-export type Expr = Expr.Literal | Expr.Unary | Expr.Binary | Expr.Grouping | Expr.LetAccess | Expr.Block | Expr.If | Expr.Function | Expr.Call
+export type Expr =
+	| Expr.Literal
+	| Expr.Unary
+	| Expr.Binary
+	| Expr.Grouping
+	| Expr.LetAccess
+	| Expr.Block
+	| Expr.If
+	| Expr.Function
+	| Expr.Call
 
 export const ToInfer = 'ToInfer'
 export type ToInfer = typeof ToInfer
@@ -11,37 +20,49 @@ export namespace Expr {
 	export class Literal {
 		readonly _tag = 'Literal'
 		constructor(readonly value: KiwiType, readonly _startToken: Token, readonly tcType: TcType) {}
-		get startToken() { return this._startToken }
+		get startToken() {
+			return this._startToken
+		}
 	}
 
 	export class Unary {
 		readonly _tag = 'Unary'
 		constructor(readonly operator: Token, readonly right: Expr) {}
-		get startToken() { return this.operator }
+		get startToken() {
+			return this.operator
+		}
 	}
 
 	export class Binary {
 		readonly _tag = 'Binary'
 		constructor(readonly left: Expr, readonly operator: Token, readonly right: Expr) {}
-		get startToken() { return this.operator }
+		get startToken() {
+			return this.operator
+		}
 	}
 
 	export class Grouping {
 		readonly _tag = 'Grouping'
 		constructor(readonly expression: Expr, readonly openParenToken: Token) {}
-		get startToken() { return this.openParenToken }
+		get startToken() {
+			return this.openParenToken
+		}
 	}
 
 	export class LetAccess {
 		readonly _tag = 'LetAccess'
 		constructor(readonly identifier: Token) {}
-		get startToken() { return this.identifier }
+		get startToken() {
+			return this.identifier
+		}
 	}
 
 	export class Block {
 		readonly _tag = 'Block'
 		constructor(readonly statements: Stmt[], readonly openBraceToken: Token) {}
-		get startToken() { return this.openBraceToken }
+		get startToken() {
+			return this.openBraceToken
+		}
 	}
 
 	export class If {
@@ -53,27 +74,45 @@ export namespace Expr {
 			readonly elseTail?: Block | If,
 			readonly elseTailToken?: Token,
 		) {}
-		get startToken(): Token { return this.condition.startToken }
+		get startToken(): Token {
+			return this.condition.startToken
+		}
 	}
 
 	export class Function {
 		readonly _tag = 'Function'
-		constructor(readonly name: Token | null, readonly params: Token[], readonly body: Stmt[], readonly functionToken: Token, readonly returnStmt: Stmt.Return) {}
-		get startToken() { return this.functionToken }
+		constructor(
+			readonly name: Token | null,
+			readonly params: Token[],
+			readonly body: Stmt[],
+			readonly functionToken: Token,
+			readonly returnStmt: Stmt.Return,
+		) {}
+		get startToken() {
+			return this.functionToken
+		}
 	}
 
 	export class Call {
 		readonly _tag = 'Call'
 		constructor(readonly callee: Expr, readonly args: Expr[], readonly closeParenToken: Token) {}
-		get startToken() { return this.closeParenToken } // FIXME: should this be the identifier called?
+		get startToken() {
+			return this.closeParenToken
+		} // FIXME: should this be the identifier called?
 	}
 }
 
 /*=================
  Statements
  ==================*/
-export type Stmt = Stmt.Expression | Stmt.Print | Stmt.LetDeclaration | Stmt.Assignment | Stmt.While | Stmt.Debugger | Stmt.Return
-
+export type Stmt =
+	| Stmt.Expression
+	| Stmt.Print
+	| Stmt.LetDeclaration
+	| Stmt.Assignment
+	| Stmt.While
+	| Stmt.Debugger
+	| Stmt.Return
 
 export namespace Stmt {
 	export class Expression {
@@ -98,7 +137,11 @@ export namespace Stmt {
 		static readonly uri = 'LetDeclaration'
 		readonly _tag = LetDeclaration.uri
 		// FIXME: Use a better type for `typeIdentifier`
-		constructor(readonly identifier: Token, readonly typeIdentifier: Token | ToInfer, readonly initializer?: Expr) {}
+		constructor(
+			readonly identifier: Token,
+			readonly typeIdentifier: Token | ToInfer,
+			readonly initializer?: Expr,
+		) {}
 	}
 
 	export class Assignment {

@@ -54,9 +54,14 @@ const UNIMPLEMENTED_RESULT: TypecheckResult = {
 	typechecks: true,
 }
 
-type MkTypecheckResultOpts = { expectedType: TcType, msg?: string, token: Token }
-const mkTypecheckResult = (ctx: ProjectContext, tcType: TcType, typechecks: boolean, { expectedType, msg, token }: MkTypecheckResultOpts) => {
-	const result = { tcType, typechecks }
+type MkTypecheckResultOpts = {expectedType: TcType; msg?: string; token: Token}
+const mkTypecheckResult = (
+	ctx: ProjectContext,
+	tcType: TcType,
+	typechecks: boolean,
+	{expectedType, msg, token}: MkTypecheckResultOpts,
+) => {
+	const result = {tcType, typechecks}
 	const {logger, sourceErrorReporter: reporter} = ctx
 
 	logger.debug(`Making typecheck result with tcType=${tcType} and typechecks=${typechecks}`)
@@ -65,7 +70,7 @@ const mkTypecheckResult = (ctx: ProjectContext, tcType: TcType, typechecks: bool
 	}
 
 	if (!typechecks) {
-		return { ...result, tcType: TcType.Error }
+		return {...result, tcType: TcType.Error}
 	}
 	return result
 }
@@ -76,11 +81,10 @@ function typecheckExpr(ctx: ProjectContext, env: Environment, node: Ast.Expr, ex
 	logger.debug(`Typechecking expr ${node._tag} [expectedType=${expectedType}]`)
 	const exprMatcher = matchAll<Ast.Expr, TypecheckResult>({
 		Literal(node) {
-			return mkTypecheckResult(
-				ctx,
-				node.tcType, node.tcType === expectedType,
-				{ expectedType, token: node.startToken }
-			)
+			return mkTypecheckResult(ctx, node.tcType, node.tcType === expectedType, {
+				expectedType,
+				token: node.startToken,
+			})
 		},
 		Unary(node) {
 			const [expectedType, resultType] = unaryMatcher<[TcType, TcType]>(node, {
@@ -89,11 +93,7 @@ function typecheckExpr(ctx: ProjectContext, env: Environment, node: Ast.Expr, ex
 			})
 
 			const {typechecks} = typecheckExpr(ctx, env, node.right, expectedType)
-			return mkTypecheckResult(
-				ctx,
-				resultType, typechecks,
-				{ expectedType, token: node.startToken }
-			)
+			return mkTypecheckResult(ctx, resultType, typechecks, {expectedType, token: node.startToken})
 		},
 		Binary(node) {
 			let [leftType, rightType, resultType] = binaryMatcher<[TcType, TcType, TcType]>(node, {
@@ -114,12 +114,10 @@ function typecheckExpr(ctx: ProjectContext, env: Environment, node: Ast.Expr, ex
 			const leftResult = typecheckExpr(ctx, env, node.left, leftType)
 			const rightResult = typecheckExpr(ctx, env, node.right, rightType)
 
-			return mkTypecheckResult(
-				ctx,
-				resultType,
-				resultType == expectedType,
-				{ expectedType, token: node.startToken }
-			)
+			return mkTypecheckResult(ctx, resultType, resultType == expectedType, {
+				expectedType,
+				token: node.startToken,
+			})
 		},
 		Grouping(node) {
 			return typecheckExpr(ctx, env, node.expression, expectedType)
@@ -129,15 +127,10 @@ function typecheckExpr(ctx: ProjectContext, env: Environment, node: Ast.Expr, ex
 			if (symbolType === undefined) {
 				reportUnreachable(`LetAccess: could not find type in environment for "${node.identifier.lexeme}"`)
 			}
-			return mkTypecheckResult(
-				ctx,
-				symbolType,
-				symbolType == expectedType,
-				{
-					expectedType,
-					token: node.startToken
-				}
-			)
+			return mkTypecheckResult(ctx, symbolType, symbolType == expectedType, {
+				expectedType,
+				token: node.startToken,
+			})
 		},
 		If(node) {
 			logger.error(`UNIMPLEMENTED! if in line ${node.startToken.line}`)
@@ -187,15 +180,10 @@ function typecheckStmt(ctx: ProjectContext, env: Environment, node: Ast.Stmt, ex
 
 			logger.debug(`LetDeclaration: tcTypeFromIdentifier ${tcTypeFromIdentifier}`)
 			const {typechecks, tcType} = typecheckExpr(ctx, env, node.initializer, tcTypeFromIdentifier)
-			const result = mkTypecheckResult(
-				ctx,
-				TcType.NoType,
-				typechecks && tcType == expectedType,
-				{
-					expectedType,
-					token: node.identifier,
-				}
-			)
+			const result = mkTypecheckResult(ctx, TcType.NoType, typechecks && tcType == expectedType, {
+				expectedType,
+				token: node.identifier,
+			})
 			return result
 		},
 		While(node) {

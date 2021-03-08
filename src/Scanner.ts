@@ -18,11 +18,7 @@ export class Scanner {
 		'debugger': TokenType.Debugger,
 	}
 
-	private static whitespaceChars = new Set([
-		' ',
-		'\r',
-		'\t',
-	])
+	private static whitespaceChars = new Set([' ', '\r', '\t'])
 
 	private static lineEndingTokenTypes = new Set([
 		TokenType.CloseParen,
@@ -312,7 +308,7 @@ export class Scanner {
 	}
 
 	private updateColumn() {
-		this.column = (this.current - this.lineStart)+1
+		this.column = this.current - this.lineStart + 1
 	}
 
 	private addToken(type: TokenType, literal: any = null) {

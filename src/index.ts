@@ -11,11 +11,10 @@ import {typecheck} from '#src/TypeChecker'
 import {Logger} from '#src/Logger'
 import {mkProjectContext} from '#src/ProjectContext'
 
-const VALID_MODES = ['--stdin', '--file'/*, '--replCompiler'*/]
+const VALID_MODES = ['--stdin', '--file' /*, '--replCompiler'*/]
 
 const LOG_LEVEL = Logger.Level.fromEnvVar(process.env.LOG_LEVEL) ?? Logger.Level.Debug
-const INCLUDE_STACKTRACE = process.env.INCLUDE_STACKTRACE === "1"
-
+const INCLUDE_STACKTRACE = process.env.INCLUDE_STACKTRACE === '1'
 
 export async function main(args: string[]) {
 	const mode = args[0]

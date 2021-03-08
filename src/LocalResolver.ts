@@ -3,7 +3,7 @@ import {Token} from '#src/Token'
 import {error} from '#src/Error'
 import {Instruction} from '#src/backends/bytecode/instruction'
 
-const UINT8_COUNT= 2**8
+const UINT8_COUNT = 2 ** 8
 
 export class Local {
 	constructor(readonly name: string, readonly depth: number, public initialized = false) {}
@@ -22,7 +22,7 @@ export class Resolver {
 		this.scopeDepth++
 	}
 	markInitialized() {
-		debug(`marking at ${this.localCount-1}`,this.locals)
+		debug(`marking at ${this.localCount - 1}`, this.locals)
 		this.locals[this.localCount - 1].initialized = true
 	}
 	endScope(): Instruction.T[] {
@@ -95,7 +95,7 @@ export class Resolver {
 			if (local.name === identifier.lexeme) {
 				if (!local.initialized) {
 					// FIXME: We need error synchronization in the resolver/instruction generator too oops
-					error(identifier, "Cannot read local variable in its own initiializer")
+					error(identifier, 'Cannot read local variable in its own initiializer')
 				}
 				return i
 			}
@@ -104,4 +104,3 @@ export class Resolver {
 		return null
 	}
 }
-

@@ -8,42 +8,44 @@ import {Scanner} from '#src/Scanner'
 import {assert} from '#tests/Assert'
 
 function testScanner() {
-    assert(
-        Scanner.scanText(`
+	assert(
+		Scanner.scanText(
+			`
 a   : = true
-`.trim()
-        ),
-        [
-            new Token(TokenType.Identifier, 'a', null, 1, 0),
-            new Token(TokenType.Colon, ':', null, 1, 5),
-            new Token(TokenType.Equal, '=', null, 1, 7),
-            new Token(TokenType.True, 'true', null, 1, 9),
-            semicolon(1, 13),
-            eof(1, 13),
-        ],
-    )
+`.trim(),
+		),
+		[
+			new Token(TokenType.Identifier, 'a', null, 1, 0),
+			new Token(TokenType.Colon, ':', null, 1, 5),
+			new Token(TokenType.Equal, '=', null, 1, 7),
+			new Token(TokenType.True, 'true', null, 1, 9),
+			semicolon(1, 13),
+			eof(1, 13),
+		],
+	)
 
-    assert(
-        Scanner.scanText(`
+	assert(
+		Scanner.scanText(
+			`
 call(9_9.99) // my comment
 lol(2_333)
-`.trim()
-        ),
-        [
-            new Token(TokenType.Identifier, 'call', null, 1, 0),
-            new Token(TokenType.OpenParen, '(', null, 1, 5),
-            new Token(TokenType.DoubleLit, '9_9.99', 99.99, 1, 6),
-            new Token(TokenType.CloseParen, ')', null, 1, 12),
-            semicolon(1, 14),
- 
-            new Token(TokenType.Identifier, 'lol', null, 2, 0),
-            new Token(TokenType.OpenParen, '(', null, 2, 4),
-            new Token(TokenType.IntegerLit, '2_333', 2333, 2, 5),
-            new Token(TokenType.CloseParen, ')', null, 2, 10),
-            semicolon(2, 11),
-            eof(2, 11),
-        ]
-    )
+`.trim(),
+		),
+		[
+			new Token(TokenType.Identifier, 'call', null, 1, 0),
+			new Token(TokenType.OpenParen, '(', null, 1, 5),
+			new Token(TokenType.DoubleLit, '9_9.99', 99.99, 1, 6),
+			new Token(TokenType.CloseParen, ')', null, 1, 12),
+			semicolon(1, 14),
+
+			new Token(TokenType.Identifier, 'lol', null, 2, 0),
+			new Token(TokenType.OpenParen, '(', null, 2, 4),
+			new Token(TokenType.IntegerLit, '2_333', 2333, 2, 5),
+			new Token(TokenType.CloseParen, ')', null, 2, 10),
+			semicolon(2, 11),
+			eof(2, 11),
+		],
+	)
 }
 /*
 function testScannerz() {
